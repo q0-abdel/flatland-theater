@@ -12,7 +12,7 @@ interface CharacterModelProps {
 const CharacterModel: React.FC<CharacterModelProps> = ({ character, position }) => {
   const groupRef = useRef<Group>(null);
   const bodyRef = useRef<Mesh>(null);
-  const headRef = useRef<Mesh>(null);
+  const headRef = useRef<Group>(null);
   
   // Convert body orientation to radians
   const bodyRotationY = (character.bodyOrientation * Math.PI) / 180;
@@ -97,10 +97,7 @@ const CharacterModel: React.FC<CharacterModelProps> = ({ character, position }) 
       {/* Main Character Body with detailed geometry */}
       <mesh ref={bodyRef} castShadow receiveShadow>
         <boxGeometry args={appearance.size} />
-        <meshPhongMaterial 
-          color={appearance.bodyColor}
-          shininess={30}
-        />
+        <meshPhongMaterial color={appearance.bodyColor} shininess={30} />
       </mesh>
       
       {/* Arms */}
@@ -124,34 +121,41 @@ const CharacterModel: React.FC<CharacterModelProps> = ({ character, position }) 
       </mesh>
       
       {/* Detailed Head with facial features */}
-      <group 
-        ref={headRef}
-        position={[0, appearance.size[1] / 2 + 0.3, 0]}
-      >
+      <group ref={headRef} position={[0, appearance.size[1] / 2 + 0.3, 0]}>
         {/* Head base */}
         <mesh castShadow>
           <boxGeometry args={[0.4, 0.4, 0.3]} />
           <meshPhongMaterial color={appearance.skinColor} />
         </mesh>
         
-        {/* Eyes */}
-        <mesh position={[-0.1, 0.05, 0.12]} castShadow>
-          <sphereGeometry args={[0.04, 8, 8]} />
+        {/* Eyes - Much more prominent and visible */}
+        <mesh position={[-0.1, 0.05, 0.14]} castShadow>
+          <sphereGeometry args={[0.06, 12, 12]} />
           <meshPhongMaterial color="#ffffff" />
         </mesh>
-        <mesh position={[0.1, 0.05, 0.12]} castShadow>
-          <sphereGeometry args={[0.04, 8, 8]} />
+        <mesh position={[0.1, 0.05, 0.14]} castShadow>
+          <sphereGeometry args={[0.06, 12, 12]} />
           <meshPhongMaterial color="#ffffff" />
         </mesh>
         
-        {/* Eye pupils */}
-        <mesh position={[-0.1, 0.05, 0.14]} castShadow>
-          <sphereGeometry args={[0.02, 6, 6]} />
+        {/* Eye pupils - Larger and more visible */}
+        <mesh position={[-0.1, 0.05, 0.17]} castShadow>
+          <sphereGeometry args={[0.03, 8, 8]} />
           <meshPhongMaterial color="#000000" />
         </mesh>
-        <mesh position={[0.1, 0.05, 0.14]} castShadow>
-          <sphereGeometry args={[0.02, 6, 6]} />
+        <mesh position={[0.1, 0.05, 0.17]} castShadow>
+          <sphereGeometry args={[0.03, 8, 8]} />
           <meshPhongMaterial color="#000000" />
+        </mesh>
+        
+        {/* Eye iris - Add color to make eyes more expressive */}
+        <mesh position={[-0.1, 0.05, 0.16]} castShadow>
+          <sphereGeometry args={[0.025, 8, 8]} />
+          <meshPhongMaterial color="#4169e1" />
+        </mesh>
+        <mesh position={[0.1, 0.05, 0.16]} castShadow>
+          <sphereGeometry args={[0.025, 8, 8]} />
+          <meshPhongMaterial color="#4169e1" />
         </mesh>
         
         {/* Nose */}
