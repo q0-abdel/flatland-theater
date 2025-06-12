@@ -12,7 +12,6 @@ interface TheaterStageProps {
 const TheaterStage: React.FC<TheaterStageProps> = ({ lineLength }) => {
   const lineSpacing = 0.8; // spacing between units on the line
   const lineStartX = -(lineLength - 1) * lineSpacing / 2;
-  const lineEndX = (lineLength - 1) * lineSpacing / 2;
 
   return (
     <>
@@ -115,12 +114,6 @@ const TheaterStage: React.FC<TheaterStageProps> = ({ lineLength }) => {
           </mesh>
         );
       })}
-
-      {/* Stage lighting equipment */}
-      <mesh position={[0, 7.5, 2]} receiveShadow>
-        <cylinderGeometry args={[0.2, 0.2, 16]} />
-        <meshLambertMaterial color="#333333" />
-      </mesh>
       
       {/* Ceiling */}
       <mesh position={[0, 8, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
