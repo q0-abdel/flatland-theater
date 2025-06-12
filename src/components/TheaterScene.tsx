@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
@@ -34,7 +33,7 @@ const TheaterScene: React.FC<TheaterSceneProps> = ({
     }
   }, [simulationState, config.lineLength]);
 
-  // Animation frame loop for character updates
+  // Animation frame loop for character updates with actual movement logic
   useAnimationFrame(() => {
     if (simulationState !== 'running' || characters.length === 0) return;
 
@@ -44,7 +43,7 @@ const TheaterScene: React.FC<TheaterSceneProps> = ({
     setCharacters(prevCharacters => 
       prevCharacters.map(character => ({
         ...character,
-        animationProgress: Math.min(1, character.animationProgress + 0.016) // ~60fps
+        animationProgress: Math.min(1, character.animationProgress + 0.02) // Slightly faster animation
       }))
     );
 
@@ -56,13 +55,55 @@ const TheaterScene: React.FC<TheaterSceneProps> = ({
         // Process actions for each character
         updatedCharacters.forEach((character, index) => {
           if (character.animationProgress >= 1) {
-            // Character is ready for a new action
-            // This will be expanded with the full action system
-            updatedCharacters[index] = {
-              ...character,
-              animationState: 'idle',
-              animationProgress: 0
-            };
+            // Character is ready for a new action - implement actual movement logic
+            const actions = ['move_forward', 'turn_body_left', 'turn_body_right', 'turn_head_left', 'turn_head_right', 'idle'];
+            const randomAction = actions[Math.floor(Math.random() * actions.length)];
+            
+            let newCharacter = { ...character };
+            
+            switch (randomAction) {
+              case 'move_forward':
+                // Check if character can move forward
+                if ((character.bodyOrientation === 90 || character.bodyOrientation === 270) && 
+                    character.headOrientation === 0) {
+                  const targetPos = character.bodyOrientation === 90 ? 
+                    character.position + 1 : character.position - 1;
+                  
+                  // Check bounds and if position is free
+                  if (targetPos >= 0 && targetPos < config.lineLength && 
+                      !prevCharacters.some(c => c.id !== character.id && c.position === targetPos)) {
+                    newCharacter.position = targetPos;
+                    newCharacter.animationState = 'walking';
+                  }
+                }
+                break;
+                
+              case 'turn_body_left':
+                newCharacter.bodyOrientation = ((character.bodyOrientation - 90 + 360) % 360) as any;
+                newCharacter.animationState = 'turning_body';
+                break;
+                
+              case 'turn_body_right':
+                newCharacter.bodyOrientation = ((character.bodyOrientation + 90) % 360) as any;
+                newCharacter.animationState = 'turning_body';
+                break;
+                
+              case 'turn_head_left':
+                newCharacter.headOrientation = Math.max(-90, character.headOrientation - 90) as any;
+                newCharacter.animationState = 'turning_head';
+                break;
+                
+              case 'turn_head_right':
+                newCharacter.headOrientation = Math.min(90, character.headOrientation + 90) as any;
+                newCharacter.animationState = 'turning_head';
+                break;
+                
+              default:
+                newCharacter.animationState = 'idle';
+            }
+            
+            newCharacter.animationProgress = 0;
+            updatedCharacters[index] = newCharacter;
           }
         });
 
@@ -74,7 +115,7 @@ const TheaterScene: React.FC<TheaterSceneProps> = ({
   });
 
   return (
-    <div className="w-full h-screen bg-black">
+    <div className="w-full h-screen bg-gray-900">
       <Canvas shadows>
         {/* Camera positioned as theater audience */}
         <PerspectiveCamera 
@@ -105,37 +146,60 @@ const TheaterScene: React.FC<TheaterSceneProps> = ({
           onCharactersUpdate={setCharacters}
         />
         
-        {/* Ambient lighting */}
-        <ambientLight intensity={0.2} color="#4a5568" />
+        {/* Much brighter ambient lighting */}
+        <ambientLight intensity={0.8} color="#ffffff" />
         
-        {/* Main stage lighting */}
+        {/* Multiple bright stage lights */}
         <spotLight
-          position={[-3, 8, 2]}
+          position={[-4, 10, 3]}
           target-position={[-1, 0, 0]}
-          angle={0.3}
-          penumbra={0.5}
-          intensity={1.5}
-          color="#ffeb3b"
+          angle={0.4}
+          penumbra={0.3}
+          intensity={2.5}
+          color="#ffffff"
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
         />
         
         <spotLight
-          position={[3, 8, 2]}
+          position={[4, 10, 3]}
           target-position={[1, 0, 0]}
-          angle={0.3}
-          penumbra={0.5}
-          intensity={1.5}
-          color="#ffeb3b"
+          angle={0.4}
+          penumbra={0.3}
+          intensity={2.5}
+          color="#ffffff"
           castShadow
         />
         
-        {/* Rim lighting */}
+        <spotLight
+          position={[0, 12, 4]}
+          target-position={[0, 0, 0]}
+          angle={0.6}
+          penumbra={0.4}
+          intensity={2.0}
+          color="#f8f8ff"
+          castShadow
+        />
+        
+        {/* Fill lighting from sides */}
+        <directionalLight
+          position={[-8, 6, 2]}
+          intensity={1.2}
+          color="#ffffff"
+        />
+        
+        <directionalLight
+          position={[8, 6, 2]}
+          intensity={1.2}
+          color="#ffffff"
+        />
+        
+        {/* Back lighting */}
         <directionalLight
           position={[0, 5, -3]}
-          intensity={0.8}
-          color="#ff6b6b"
+          intensity={1.0}
+          color="#ffffff"
         />
       </Canvas>
     </div>
