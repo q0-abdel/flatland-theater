@@ -103,11 +103,11 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({ onStart, initia
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
           <Card className="bg-gray-800/30 border-gray-700">
             <CardHeader>
-              <CardTitle className="text-white">High Realism</CardTitle>
+              <CardTitle className="text-white">Basic Realism</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-400">
-                Characters with Sims-level detail, realistic animations, and expressive interactions.
+                We chose basic realism for this web-based implementation with simplified 3D characters and smooth animations.
               </p>
             </CardContent>
           </Card>
