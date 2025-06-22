@@ -23,6 +23,19 @@ This was also an opportunity to experiment with **Lovable**, an AI-powered codin
 
 **Observation:** Even with these minimal constraints, observers witness the emergence of relationships, tensions, comedy, and drama purely through positioning and movement.
 
+## Technical Implementation
+
+### Realism Level Choice
+
+We chose **basic realism** for this web-based implementation instead of the originally envisioned high realistic resolution (Sims-level detail) due to several technical challenges:
+
+- **Web Platform Limitations**: Achieving Sims-level character realism requires high-poly 3D models, complex textures, and sophisticated animation systems that are resource-intensive for web browsers
+- **Asset Creation Complexity**: Creating realistic 3D characters requires specialized modeling software and artistic expertise beyond code generation capabilities
+- **Performance Constraints**: Realistic characters with detailed animations would significantly impact performance in a web environment
+- **Development Focus**: Prioritizing the core simulation logic and theatrical concepts over visual fidelity allows for faster prototyping and iteration
+
+The current implementation uses simplified 3D characters with smooth animations that effectively demonstrate the theatrical concepts while maintaining good performance and accessibility through web browsers.
+
 ## Built With Lovable & Vibe Coding
 
 This simulation was created using **Lovable** (https://lovable.dev), an AI editor for web applications, demonstrating rapid prototyping through conversational coding. The entire 3D theater environment was built through natural language descriptions and iterative refinement.
